@@ -17,7 +17,7 @@ To use BaseX, compile the source code with a C compiler using std C23:
 mkdir build | clang -Iinclude -std=c23 src/*.c -o build/basex
 ```
 
-Make sure that the `base8.h`, `base32.h`, and `base64.h` header files are in root/include, and source files are in root/src, or this command will not work.
+Make sure that the `base8.h`, `base32.h`, and `base64.h` header files are in projectRoot/include, and source files are in projectRoot/src, or this command will not work.
 
 ## Usage
 
