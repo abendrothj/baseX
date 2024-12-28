@@ -160,7 +160,7 @@ int main(int argc, char** argv) {
     char* output = encoder_func(file_contents, size);
     free(file_contents);
     if (output != NULL) {
-      puts(output);
+      printf("%s", output);
       free(output);
     } else {
       return EXIT_FAILURE;

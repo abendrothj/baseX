@@ -103,10 +103,10 @@ char *base8_decode(char *string, size_t length, size_t *size_out) {
       if (base8[j] != '=') {
         base8[j] = inverse_table[reader.data[j]];
       } else {
-        base8[j] = 0;
+        break;
       }
     }
-    base8[reader.digits_produced] = '\0';
+
     if (reader.digits_produced > 2) {
       out[output_len++] = (base8[0] << 5 | base8[1] << 2 | base8[2] >> 1);
     }
@@ -120,6 +120,7 @@ char *base8_decode(char *string, size_t length, size_t *size_out) {
       out[output_len++] = ((base8[5] & 0x3) << 6 | base8[6] << 3 | base8[7]);
     }
   }
+  out[output_len] = '\0';
   *size_out = output_len;
   return out;
 }

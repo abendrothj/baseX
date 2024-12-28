@@ -105,50 +105,33 @@ char* base32_decode(char* string, size_t length, size_t* size_out) {
   for (size_t i = 0; i < sizeof(ALPHABET); ++i) {
     inverse_table[(unsigned char)ALPHABET[i]] = i;
   }
+
   char* out = calloc(length * 5 / 8, 1);
   if (out == NULL) {
     perror("Memory couldn't be allocated");
     return NULL;
   }
+
   size_t output_len = 0;
   for (size_t i = 0; i < length; i += 8) {
     chunk reader = read_chunk(string + i, length - i);
 
     unsigned char b32bytes[reader.digits_produced + 1];
+    size_t valid_digits = 0;
+
     for (size_t j = 0; j < reader.digits_produced; j++) {
-      if (reader.data[j] != '=') {
-        b32bytes[j] = inverse_table[reader.data[j]];
-      } else {
-        b32bytes[j] = 0;
+      if (reader.data[j] == '=') {
+        break;  // Stop processing at the first padding.
       }
-    }
-    b32bytes[reader.digits_produced] = '\0';
-
-    // Combine the bits to form original bytes
-    unsigned char byte0 = (b32bytes[0] << 3) | (b32bytes[1] >> 2);
-    out[output_len++] = byte0;
-
-    if (reader.digits_produced > 2 && reader.data[2] != '=') {
-      unsigned char byte1 =
-          (b32bytes[1] << 6) | (b32bytes[2] << 1) | (b32bytes[3] >> 4);
-      out[output_len++] = byte1;
+      b32bytes[valid_digits++] = inverse_table[reader.data[j]];
     }
 
-    if (reader.digits_produced > 4 && reader.data[4] != '=') {
-      unsigned char byte2 = (b32bytes[3] << 4) | (b32bytes[4] >> 1);
-      out[output_len++] = byte2;
-    }
-
-    if (reader.digits_produced > 5 && reader.data[5] != '=') {
-      unsigned char byte3 =
-          (b32bytes[4] << 7) | (b32bytes[5] << 2) | (b32bytes[6] >> 3);
-      out[output_len++] = byte3;
-    }
-
-    if (reader.digits_produced > 7 && reader.data[7] != '=') {
-      unsigned char byte4 = (b32bytes[6] << 5) | b32bytes[7];
-      out[output_len++] = byte4;
-    }
+    // Combine bits based on valid_digits
+    if (valid_digits > 1) out[output_len++] = (b32bytes[0] << 3) | (b32bytes[1] >> 2);
+    if (valid_digits > 3) out[output_len++] = (b32bytes[1] << 6) | (b32bytes[2] << 1) | (b32bytes[3] >> 4);
+    if (valid_digits > 4) out[output_len++] = (b32bytes[3] << 4) | (b32bytes[4] >> 1);
+    if (valid_digits > 6) out[output_len++] = (b32bytes[4] << 7) | (b32bytes[5] << 2) | (b32bytes[6] >> 3);
+    if (valid_digits > 7) out[output_len++] = (b32bytes[6] << 5) | b32bytes[7];
   }
 
   *size_out = output_len;
