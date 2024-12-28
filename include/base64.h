@@ -1,3 +1,5 @@
+#ifndef BASE64_H
+#define BASE64_H
 #include <stddef.h>
 
 // Encode given data in base 64.
@@ -13,3 +15,4 @@ char* base64_encode(char* array, size_t size);
 //
 // If decoding fails due to input validation, the return value is NULL.
 char* base64_decode(char* string, size_t length, size_t* size_out);
+#endif // BASE64_H

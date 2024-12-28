@@ -1,3 +1,5 @@
+#ifndef BASE32_H
+#define BASE32_H
 #include <stddef.h>
 
 // Encode given data in base 32.
@@ -13,3 +15,4 @@ char* base32_encode(char* array, size_t size);
 //
 // If decoding fails due to input validation, the return value will be NULL.
 char* base32_decode(char* string, size_t length, size_t* size_out);
+#endif // BASE32_H
