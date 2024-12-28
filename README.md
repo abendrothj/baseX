@@ -1,4 +1,4 @@
-# BaseX: A Base8/Base32/Base64 Encoder/Decoder
+# BaseX: A Base8/Base32/Base64 Encoder/Decoder in C
 
 BaseX is a command-line tool for encoding and decoding files using the Base8, Base32, and Base64 formats. It provides a straightforward interface for transforming file content into these formats or decoding them back to their original state.
 
